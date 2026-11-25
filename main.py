@@ -77,10 +77,14 @@ def main():
         return fail(problems)
 
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
-    os.makedirs(out_dir, exist_ok=True)
-    path = os.path.join(out_dir, "entry.txt")
-    with open(path, "w", encoding="utf-8", newline="") as handle:
-        handle.write(MONOLOGUE)
+    try:
+        os.makedirs(out_dir, exist_ok=True)
+        path = os.path.join(out_dir, "entry.txt")
+        with open(path, "w", encoding="utf-8", newline="") as handle:
+            handle.write(MONOLOGUE)
+    except OSError as exc:
+        print("cannot write entry: %s" % exc, file=sys.stderr)
+        return 1
 
     with open(path, encoding="utf-8") as handle:
         on_disk = handle.read()
